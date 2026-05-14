@@ -410,6 +410,7 @@ function getSiyamData(){try{return JSON.parse(_ls.getItem(SIYAMK)||'{}')}catch(e
 function saveSiyamData(d){_ls.setItem(SIYAMK,JSON.stringify(d));}
 function getSiyamPoints(){const d=getSiyamData();let t=0;for(let day=1;day<=9;day++)if(d["siyam-"+day]||d['read-'+day])t+=10;return t;}
 
+const AK='dhulhijja_amal_v1';
 function getAmalDone(){try{return JSON.parse(_ls.getItem(AK)||'{}')}catch(e){return {};}}
 function toggleAmal(){const body=document.getElementById('amalBody');const arr=document.getElementById('amalArr');const open=body.style.display==='block';body.style.display=open?'none':'block';arr.textContent=open?'▼':'▲';if(!open)buildAmal();}
 function buildAmal(){
