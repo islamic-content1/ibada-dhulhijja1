@@ -21,7 +21,7 @@
 <div id="toast"></div>
 <script>
 const SHEET_ID='1Xy0Yr7jSxCpozMz8b93CifgoD8oPKSMdk-6dmZoxbRg';
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyJTA_HOGCzUe8_PtXWY-oUBcub_UYcV3v8W2w9eI1ucD9XPQNAVo7aTGjKr5vVSYfR/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzcyt_3E0tnQixJiN5_Ge2rKzsW48hIpi5eWxJEjjqhQmvq2sGeipK93U2mQr3Mwiud/exec';
 const DAYS=9;
 const ROWS=[
   {cat:'الأذكار',ibada:'أذكار الصباح',pts:5},
@@ -41,7 +41,8 @@ const ROWS=[
   {cat:'الذكر',ibada:'صلاة على الرسول',pts:5,customIdx:6,ptsDiv:100,note:'أدنى ٢٠٠/يوم'},
   {cat:'الذكر',ibada:'استغفار',pts:5,customIdx:7,ptsDiv:100,note:'أدنى ٢٠٠/يوم'},
   {cat:'الذكر',ibada:'تهليل',pts:5,customIdx:8,ptsDiv:100,note:'أدنى ٤٠٠/يوم'},
-  {cat:'الذكر',ibada:'سبحان الله وبحمده',pts:2,customIdx:9,ptsDiv:50,note:'أدنى ١٠٠/يوم'}
+  {cat:'الذكر',ibada:'سبحان الله وبحمده',pts:2,customIdx:9,ptsDiv:50,note:'أدنى ١٠٠/يوم'},
+  {cat:'صدقة',ibada:'صدقة يومية',pts:1}
 ];
 const CUSTOM_DEFS=[
   {ibada:'سورة البقرة',type:'choice',choices:[{label:'نصف البقرة',pts:10},{label:'البقرة كاملة',pts:20}]},
@@ -70,7 +71,7 @@ const DUAAS=[
   'ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار.'
 ];
 const DUAA_ITEMS=[{key:'daily',name:'دعاء اليوم',pts:1},{key:'self',name:'دعاء لنفسك',pts:1},{key:'ummah',name:'دعاء لأمة المسلمين',pts:1}];
-const CAT_ORDER=['الأذكار','القرآن','القيام','الصلاة','الذكر'];
+const CAT_ORDER=['الأذكار','القرآن','القيام','الصلاة','الذكر','صدقة'];
 let girlsData=[];
 const sk=(r,d)=>r+'-'+d;
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -88,7 +89,7 @@ async function loadData(){
     const rows=json.table.rows||[];
     girlsData=rows.filter(r=>r.c&&r.c[0]&&r.c[0].v).map(r=>{
       const c=r.c;const dt=[];for(let i=4;i<13;i++)dt.push(c[i]?Number(c[i].v)||0:0);
-      return {name:c[0].v,grand:c[1]?Number(c[1].v)||0:0,avg:c[2]?c[2].v:'—',filled:c[3]?c[3].v:0,dayTotals:dt,state:readJSON(c[15]&&c[15].v,{}),lastUpdate:c[16]&&c[16].v?c[16].v.toString():'',notes:readJSON(c[17]&&c[17].v,{}),customSettings:readJSON(c[19]&&c[19].v,[]),amal:readJSON(c[20]&&c[20].v,{}),duaa:readJSON(c[21]&&c[21].v,{})};
+      return {name:c[0].v,grand:c[1]?Number(c[1].v)||0:0,avg:c[2]?c[2].v:'—',filled:c[3]?c[3].v:0,dayTotals:dt,state:readJSON(c[15]&&c[15].v,{}),lastUpdate:c[16]&&c[16].v?c[16].v.toString():'',notes:readJSON(c[17]&&c[17].v,{}),customSettings:readJSON(c[19]&&c[19].v,[]),amal:readJSON(c[20]&&c[20].v,{}),duaa:readJSON(c[21]&&c[21].v,{}),siyam:readJSON(c[22]&&c[22].v,{})};
     });
     document.getElementById('lastUp').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar');render();showToast('تم التحديث ✓ — '+girlsData.length+' بنت');
   }catch(e){console.error(e);showToast('خطأ في التحميل');}
@@ -128,7 +129,7 @@ function girlCard(g,gi,sorted,maxG){
   const pct=maxG>0?Math.round(g.grand/maxG*100):0;const rank=sorted.findIndex(s=>s.name===g.name)+1;const medal=rank<=3?['🥇','🥈','🥉'][rank-1]:'#'+rank;const dt=g.dayTotals||Array(DAYS).fill(0);
   const dots=dt.map((v,i)=>'<div class="dd '+(v>0?'f':'e')+'"><div class="dn">'+(i+1)+'</div>'+(v>0?v:'')+'</div>').join('');
   const chips=CUSTOM_DEFS.map((_,i)=>'<span class="chip">'+esc(customLabel(g,i))+'</span>').join('');
-  return '<div class="girl-card"><div class="gc-hdr"><div class="gc-name">'+medal+' '+esc(g.name)+'</div><div class="gc-pts">'+g.grand+' نقطة | معدل '+g.avg+'</div></div><div class="gc-body"><div class="custom-box"><div class="custom-title">⚙️ اختيارات وكميات البنت</div><div class="chips">'+chips+'</div></div><div class="prog-row"><span>التقدم الكلي</span><span>'+pct+'%</span></div><div class="prog-t"><div class="prog-f" style="width:'+pct+'%"></div></div><div class="days-row">'+dots+'</div><button class="toggle-btn" onclick="toggleDetails('+gi+',this)"><span>عرض تفاصيل العبادات</span><span>▼</span></button><div class="details" id="details_'+gi+'">'+detailsTable(g)+notesHtml(g)+'<div style="font-size:10px;color:var(--mu);margin-top:8px;text-align:left">آخر إرسال: '+esc(g.lastUpdate||'—')+'</div></div><button class="section-btn" onclick="togglePanel(\'amalPanel_'+gi+'\',this)"><span>🌟 العمل الصالح</span><span>▼</span></button><div class="mini-panel" id="amalPanel_'+gi+'">'+amalHtml(g)+'</div><button class="section-btn" onclick="togglePanel(\'duaaPanel_'+gi+'\',this)"><span>🤲 خانة الدعاء</span><span>▼</span></button><div class="mini-panel" id="duaaPanel_'+gi+'">'+duaaHtml(g)+'</div></div></div>';
+  return '<div class="girl-card"><div class="gc-hdr"><div class="gc-name">'+medal+' '+esc(g.name)+'</div><div class="gc-pts">'+g.grand+' نقطة | معدل '+g.avg+'</div></div><div class="gc-body"><div class="custom-box"><div class="custom-title">⚙️ اختيارات وكميات البنت</div><div class="chips">'+chips+'</div></div><div class="prog-row"><span>التقدم الكلي</span><span>'+pct+'%</span></div><div class="prog-t"><div class="prog-f" style="width:'+pct+'%"></div></div><div class="days-row">'+dots+'</div><button class="toggle-btn" onclick="toggleDetails('+gi+',this)"><span>عرض تفاصيل العبادات</span><span>▼</span></button><div class="details" id="details_'+gi+'">'+detailsTable(g)+notesHtml(g)+'<div style="font-size:10px;color:var(--mu);margin-top:8px;text-align:left">آخر إرسال: '+esc(g.lastUpdate||'—')+'</div></div><button class="section-btn" onclick="togglePanel(\'amalPanel_'+gi+'\',this)"><span>🌟 العمل الصالح</span><span>▼</span></button><div class="mini-panel" id="amalPanel_'+gi+'">'+amalHtml(g)+'</div><button class="section-btn" onclick="togglePanel(\'duaaPanel_'+gi+'\',this)"><span>🤲 خانة الدعاء</span><span>▼</span></button><div class="mini-panel" id="duaaPanel_'+gi+'">'+duaaHtml(g)+'</div><button class=\"section-btn\" onclick=\"togglePanel(\'siyamPanel_'+gi+'\',this)\"><span>🌙 الصيام وقراءة أسماء الله الحسنى</span><span>▼</span></button><div class=\"mini-panel\" id=\"siyamPanel_'+gi+'\">'+ siyamHtml(g)+'</div></div></div>';
 }
 function detailsTable(g){
   let html='<table class="detail-table"><thead><tr><th class="catH">الفئة</th><th class="ibH">العبادة</th><th class="ptsH">نقاط</th>';for(let d=1;d<=DAYS;d++)html+='<th class="dayH">'+d+'</th>';html+='<th class="ptsH">مج</th></tr></thead><tbody>';
@@ -145,6 +146,22 @@ function duaaHtml(g){
   const duaa=g.duaa||{};let count=0;Object.keys(duaa).forEach(k=>{if(duaa[k])count++;});let html='<div class="custom-box"><div class="custom-title">تم: '+count+'/30</div>';
   for(let d=1;d<=DAYS;d++){let any=DUAA_ITEMS.some(it=>duaa[d+'-'+it.key]);if(!any)continue;html+='<div class="duaa-day"><div class="duaa-title">اليوم '+d+'</div><div class="duaa-text">'+esc(DUAAS[d-1]||'')+'</div><div class="duaa-list">';DUAA_ITEMS.forEach(it=>{html+='<span class="'+(duaa[d+'-'+it.key]?'amal-ok':'amal-no')+'">'+(duaa[d+'-'+it.key]?'✓ ':'')+esc(it.name)+' — ٢</span>';});html+='</div></div>';}
   if(count===0)html+='<div style="font-size:10px;color:#aaa">لا يوجد دعاء محدد بعد</div>';
+  return html+'</div>';
+}
+function siyamHtml(g){
+  const data=g.siyam||{};let earned=0;for(let d=1;d<=9;d++)if(data['siyam-'+d]||data['read-'+d])earned++;
+  let html='<div class="custom-box"><div class="custom-title">🌙 الصيام / القراءة: '+earned+'/10 يوم ('+earned*10+' نقطة)</div>';
+  for(let d=1;d<=9;d++){
+    const fasted=!!data['siyam-'+d];const read=!!data['read-'+d];const note=data['readNote-'+d]||'';
+    if(!fasted&&!read&&!note)continue;
+    html+='<div class="duaa-day"><div class="duaa-title">اليوم '+d;
+    if(fasted) html+=' <span style="background:#d4f4e2;color:#1a6b3c;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700">🌙 صائمة</span>';
+    else if(read) html+=' <span style="background:#e8f4fd;color:#1a4a8a;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700">📖 قرأت</span>';
+    html+='</div>';
+    if(note) html+='<div class="duaa-text" style="background:#fffdf0;border:1px solid #f0c040;border-radius:6px;padding:5px 8px;margin-top:4px">✍️ '+esc(note)+'</div>';
+    html+='</div>';
+  }
+  if(earned===0) html+='<div style="font-size:10px;color:#aaa">لا يوجد بيانات بعد</div>';
   return html+'</div>';
 }
 function notesHtml(g){
