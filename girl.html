@@ -14,7 +14,7 @@ html,body{overflow-x:hidden;width:100%}
 body{font-family:'Amiri',system-ui,Tahoma,sans-serif;background:var(--bg);color:var(--tx);padding:1.2rem 0.8rem 3rem}
 .hdr{text-align:center;margin-bottom:1.4rem;padding-bottom:1rem;border-bottom:1.5px solid var(--bd)}
 .bsm{font-size:16px;color:var(--gold);margin-bottom:5px;font-weight:600}
-.hdr h1{font-size:24px;font-weight:700;color:#d4a017;font-family:'Amiri',serif;text-shadow:0 1px 3px rgba(0,0,0,.2)}
+.hdr h1{font-size:24px;font-weight:700;color:#c4a882;font-family:'Amiri',serif;text-shadow:0 1px 3px rgba(0,0,0,.2)}
 .hdr p{font-size:12px;color:var(--mu);margin-top:5px}
 .leg{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;font-size:12px;color:var(--mu)}
 .li{display:flex;align-items:center;gap:5px}
@@ -136,7 +136,7 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--gDD);font-s
   <div class="amal-body" id="duaaBody"></div>
 </div>
 <div class="amal-box">
-  <div class="amal-hdr" onclick="toggleSiyam()"><span>🌙 الصيام وقراءة أسماء الله الحسنى</span><span class="arr" id="siyamArr">▼</span></div>
+  <div class="amal-hdr" onclick="toggleSiyam()"><span>🌙 الصيام</span><span class="arr" id="siyamArr">▼</span></div>
   <div class="amal-body" id="siyamBody"></div>
 </div>
 <div class="btns">
@@ -157,53 +157,47 @@ var SNK='dhulhijja_notes_v1';
 var CK='dhulhijja_custom_v1';
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzcyt_3E0tnQixJiN5_Ge2rKzsW48hIpi5eWxJEjjqhQmvq2sGeipK93U2mQr3Mwiud/exec';
 const ROWS=[
-  {cat:'الأذكار',ibada:'أذكار الصباح',pts:5},
-  {cat:'الأذكار',ibada:'أذكار المساء',pts:5},
-  {cat:'الأذكار',ibada:'أذكار النوم',pts:5},
-  {cat:'القرآن',ibada:'ثلث البقرة',pts:10},
-  {cat:'القرآن',ibada:'جزء قرآن',pts:10,customIdx:0,badil:'أسماء الله الحسنى مع دعائها (٣× عن كل جزء)'},
-  {cat:'القرآن',ibada:'سماع قرآن (صفحة)',pts:1,customIdx:1},
-  {cat:'القيام',ibada:'ركعتين حاجة',pts:5,badil:'صيغ الحمد'},
-  {cat:'القيام',ibada:'ركعتين توبة',pts:2,badil:'صيغ الحمد'},
-  {cat:'القيام',ibada:'ركعتين شكر',pts:2,badil:'صيغ الحمد'},
-  {cat:'القيام',ibada:'قضاء فروض (فرض)',pts:3,customIdx:2,badil:'صيغ الحمد'},
-  {cat:'الصلاة',ibada:'ركعات ضحى',pts:1,customIdx:3,dynamicName:true,badil:'صلوات المحبين'},
-  {cat:'الصلاة',ibada:'ركعات أوابين',pts:1,customIdx:4,dynamicName:true,badil:'صيغ الاستغفار'},
-  {cat:'الصلاة',ibada:'فروض الصلاة',pts:5,badil:'٣٣ الباقيات الصالحات عن كل صلاة'},
-  {cat:'الصلاة',ibada:'سنن الصلوات',pts:5,badil:'١٠ "لا إله إلا أنت سبحانك إني كنت من الظالمين" عن كل سنة'},
-  {cat:'الذكر',ibada:'صلاة على الرسول',pts:5,customIdx:5,ptsDiv:100,note:'أدنى ٢٠٠ باليوم — ليل ونهار'},
-  {cat:'الذكر',ibada:'استغفار',pts:5,customIdx:6,ptsDiv:100,note:'أدنى ٢٠٠ باليوم'},
-  {cat:'الذكر',ibada:'تهليل',pts:5,customIdx:7,ptsDiv:100,note:'أدنى ٤٠٠ باليوم'},
-  {cat:'الذكر',ibada:'سبحان الله وبحمده',pts:5,customIdx:8,ptsDiv:100,note:'أدنى ١٠٠ باليوم'},
+  {cat:'القرآن',ibada:'البقرة',pts:20},
+  {cat:'القرآن',ibada:'جزء قرآن',pts:10,customIdx:0},
+  {cat:'القيام',ibada:'قيام ساعة',pts:5},
+  {cat:'القيام',ibada:'قيام ساعتين',pts:10},
+  {cat:'القيام',ibada:'قيام 3 ساعات',pts:15},
+  {cat:'الصلاة',ibada:'ركعات ضحى',pts:1,customIdx:1,dynamicName:true},
+  {cat:'الصلاة',ibada:'ركعات أوابين',pts:1,customIdx:2,dynamicName:true},
+  {cat:'الصلاة',ibada:'قضاء يوم',pts:5},
+  {cat:'الصلاة',ibada:'فرضين جماعة',pts:4},
+  {cat:'الصلاة',ibada:'3+ فروض جماعة',pts:2},
+  {cat:'الذكر',ibada:'صلاة على الرسول',pts:10,customIdx:3,ptsDiv:500,note:'أدنى ١٠٠٠ باليوم'},
+  {cat:'الذكر',ibada:'استغفار',pts:10,customIdx:4,ptsDiv:500,note:'أدنى ١٠٠٠ باليوم'},
+  {cat:'الذكر',ibada:'تهليل',pts:20,customIdx:5,ptsDiv:500,note:'أدنى ٢٥٠٠ باليوم'},
+  {cat:'الذكر',ibada:'سبحان الله وبحمده',pts:5,customIdx:6,ptsDiv:100,note:'أدنى ١٠٠ باليوم'},
   {cat:'صدقة',ibada:'صدقة يومية',pts:1},
 ];
 const CUSTOM_DEFS=[
-  {ibada:'جزء قرآن',ptsPerUnit:10,unit:'جزء/يوم',max:30,defaultVal:1},
-  {ibada:'سماع قرآن',ptsPerUnit:1,unit:'صفحة/يوم',max:100,defaultVal:5},
-  {ibada:'قضاء فروض',ptsPerUnit:3,unit:'فرض/يوم',max:20,defaultVal:1},
-  {ibada:'ركعات ضحى',ptsPerUnit:1,unit:'ركعة/يوم',max:20,defaultVal:8,dynamicName:true,baseName:'ركعات ضحى'},
-  {ibada:'ركعات أوابين',ptsPerUnit:1,unit:'ركعة/يوم',max:12,defaultVal:6,dynamicName:true,baseName:'ركعات أوابين'},
-  {ibada:'صلاة على الرسول',ptsPerUnit:5,unit:'/يوم',max:2000,defaultVal:200,ptsDiv:100,note:'أدنى ٢٠٠ باليوم'},
-  {ibada:'استغفار',ptsPerUnit:5,unit:'/يوم',max:2000,defaultVal:200,ptsDiv:100,note:'أدنى ٢٠٠ باليوم'},
-  {ibada:'تهليل',ptsPerUnit:5,unit:'/يوم',max:4000,defaultVal:400,ptsDiv:100,note:'أدنى ٤٠٠ باليوم'},
-  {ibada:'سبحان الله وبحمده',ptsPerUnit:5,unit:'/يوم',max:1000,defaultVal:100,ptsDiv:100,note:'أدنى ١٠٠ باليوم'},
+  {ibada:'جزء قرآن',ptsPerUnit:10,unit:'جزء/يوم',max:30,defaultVal:3,minVal:3,note:'أدنى ٣ أجزاء/يوم'},
+  {ibada:'ركعات ضحى',ptsPerUnit:1,unit:'ركعة/يوم',max:20,defaultVal:6,minVal:6,dynamicName:true,baseName:'ركعات ضحى',note:'أدنى ٦ ركعات'},
+  {ibada:'ركعات أوابين',ptsPerUnit:1,unit:'ركعة/يوم',max:12,defaultVal:6,minVal:6,dynamicName:true,baseName:'ركعات أوابين',note:'أدنى ٦ ركعات'},
+  {ibada:'صلاة على الرسول',ptsPerUnit:10,unit:'/يوم (مضاعفات ١٠٠)',max:5000,defaultVal:1000,ptsDiv:500,minVal:1000,note:'أدنى ١٠٠٠ باليوم'},
+  {ibada:'استغفار',ptsPerUnit:10,unit:'/يوم (مضاعفات ١٠٠)',max:5000,defaultVal:1000,ptsDiv:500,minVal:1000,note:'أدنى ١٠٠٠ باليوم'},
+  {ibada:'تهليل',ptsPerUnit:10,unit:'/يوم (مضاعفات ١٠٠)',max:10000,defaultVal:2500,ptsDiv:500,minVal:2500,note:'أدنى ٢٥٠٠ باليوم'},
+  {ibada:'سبحان الله وبحمده',ptsPerUnit:5,unit:'/يوم (مضاعفات ١٠٠)',max:1000,defaultVal:100,ptsDiv:100,minVal:100,note:'أدنى ١٠٠ باليوم'},
 ];
 const AMAL=[
+  {name:'⭐ الاعتكاف من الفجر حتى الشروق',pts:10,hadith:'قال رسول الله ﷺ: «مَن صلّى الفجرَ في جماعة، ثم قعد يذكرُ اللهَ حتى تطلعَ الشمس، ثم صلّى ركعتين، كانت له كأجرِ حجّةٍ وعمرةٍ تامّةٍ تامّةٍ تامّة»'},
+  {name:'⭐ فرضين جماعة',pts:10,hadith:'قال رسول الله ﷺ: صَلاةُ الجَمَاعَةِ أَفضَلُ مِنْ صَلاةِ الفَذِّ بِسَبْعٍ وَعِشْرِينَ دَرَجَةً'},
+  {name:'⭐ صلاة مقنطرين',pts:10,hadith:'من قام بعشر آيات لم يكتب من الغافلين، ومن قام بمائة آية كتب من القانتين، ومن قام بألف آية كتب من المقنطرين.'},
+  {name:'⭐ تحضير طبق وتقديمه للجارة',pts:10,hadith:'قال رسول الله ﷺ: «يا أبا ذر إذا طبختَ مَرَقةً فأكثِرْ ماءَها وتعاهَدْ جيرانَك»'},
   {name:'إفطار صائم',pts:5,hadith:'قال رسول الله ﷺ: «مَن فَطَّرَ صائمًا كان له مثلُ أجرِه، غيرَ أنه لا ينقص من أجرِ الصائمِ شيء»'},
   {name:'جبر خاطر الأم والأب',pts:5,hadith:'قال رسول الله ﷺ: «رِضا الربِّ في رضا الوالد، وسَخطُ الربِّ في سَخطِ الوالد»'},
   {name:'البسملة قبل كل عمل',pts:5,hadith:'قال رسول الله ﷺ: «كل أمرٍ ذي بالٍ لا يُبدأ فيه ببسم الله فهو أبتر»'},
   {name:'النوم على وضوء',pts:5,hadith:'قال رسول الله ﷺ: «إذا أتيتَ مضجعَك فتوضأْ وضوءَك للصلاة، ثم اضطجع على شقِّك الأيمن»'},
   {name:'ترتيب النية لليوم',pts:5,hadith:'«اللهم إني نويتُ أن يكون يومي هذا طاعةً لك وابتغاءً لمرضاتك، فأعني على ذكرك وشكرك وحسن عبادتك»'},
-  {name:'يوم كامل بدون إنستغرام',pts:10,hadith:''},
-  {name:'الاعتكاف من الفجر حتى الشروق',pts:10,hadith:'قال رسول الله ﷺ: «مَن صلّى الفجرَ في جماعة، ثم قعد يذكرُ اللهَ حتى تطلعَ الشمس، ثم صلّى ركعتين، كانت له كأجرِ حجّةٍ وعمرةٍ تامّةٍ تامّةٍ تامّة»'},
   {name:'إطعام حيوان',pts:5,hadith:'قال رسول الله ﷺ: «في كلِّ كَبِدٍ رَطبةٍ أجر»'},
   {name:'استخدام السواك',pts:5,hadith:'قال رسول الله ﷺ: «السِّواكُ مطهرةٌ للفمِ مرضاةٌ للرَّب»'},
   {name:'إهداء عبادة لميت',pts:5,hadith:'قال رسول الله ﷺ: «إذا مات ابنُ آدم انقطع عملُه إلا من ثلاث: صدقةٍ جارية، أو علمٍ يُنتفع به، أو ولدٍ صالحٍ يدعو له»'},
   {name:'رسالة شكر لمن له فضل عليكِ',pts:5,hadith:''},
   {name:'إدخال سرور على قلب طفل',pts:5,hadith:'قال رسول الله ﷺ: «الرَّاحمون يرحمهم الرحمن»'},
-  {name:'حفظ صفحتين قرآن',pts:10,hadith:'قال رسول الله ﷺ: «خيرُكم من تعلَّم القرآن وعلَّمه»'},
-  {name:'حفظ ٥ أحاديث',pts:10,hadith:'قال رسول الله ﷺ: «نضَّرَ اللهُ امرأً سمعَ منَّا حديثًا فحفِظَه حتى يُبلِّغَه» — أي جعله الله ذا نورٍ وبهاء بسبب حفظه لحديث النبي ﷺ'},
-  {name:'فرضين جماعة',pts:10,hadith:'قال رسول الله ﷺ: صَلاةُ الجَمَاعَةِ أَفضَلُ مِنْ صَلاةِ الفَذِّ بِسَبْعٍ وَعِشْرِينَ دَرَجَةً'},
+  {name:'إدخال السرور على أهل البيت',pts:5,hadith:'قال رسول الله ﷺ: «خيرُكم خيرُكم لأهله وأنا خيرُكم لأهلي»'},
 ];
 const DUAAS=[
   'اللهم ارحمني بالقرآن، واجعله لي إماماً وهدىً، اللهم ذكّرني منه ما نسيت وعلّمني منه ما جهلت.',
@@ -244,13 +238,14 @@ function buildNotesRow(tb){
     tb.appendChild(tnr);
   }catch(ex){console.error('notes row error:',ex);}
 }
+
 function build(){
   const tb=document.getElementById('tbody');tb.innerHTML='';let lastCat='';
   ROWS.forEach((r,ri)=>{
     const tr=document.createElement('tr');
-    if(r.cat!==lastCat){const span=ROWS.filter(x=>x.cat===r.cat).length;const td=document.createElement('td');td.className='cc';td.rowSpan=span;const abbr={'الأذكار':'أذكار','القرآن':'قرآن','القيام':'قيام','الصلاة':'صلاة','الذكر':'ذكر'};td.textContent=abbr[r.cat]||r.cat;tr.appendChild(td);lastCat=r.cat;}
+    if(r.cat!==lastCat){const span=ROWS.filter(x=>x.cat===r.cat).length;const td=document.createElement('td');td.className='cc';td.rowSpan=span;const abbr={'القرآن':'قرآن','القيام':'قيام','الصلاة':'صلاة','الذكر':'ذكر'};td.textContent=abbr[r.cat]||r.cat;tr.appendChild(td);lastCat=r.cat;}
     const ti=document.createElement('td');ti.className='ic';
-    if(r.badil){ti.style.cssText='font-size:10.5px;color:var(--tx);padding:3px 6px 3px 3px;border:1px solid #ede7db;background:var(--sf);overflow:hidden;white-space:normal;line-height:1.3';ti.innerHTML='<div>'+r.ibada+'</div><div style="font-size:8px;color:#b8860b;margin-top:1px">🔄 '+r.badil+'</div>';}
+    if(r.customIdx!==undefined){const _def=CUSTOM_DEFS[r.customIdx];const _cs=getCustomSettings();const _val=(_cs&&_cs[r.customIdx]!=null)?_cs[r.customIdx]:_def.defaultVal;const _base=_def.baseName||r.ibada;ti.textContent=_val+' '+_base;}
     else{ti.textContent=r.ibada;}
     tr.appendChild(ti);
     const tp=document.createElement('td');tp.className='pc';tp.id='pts_'+ri;tp.textContent=r.pts;tr.appendChild(tp);
@@ -261,6 +256,7 @@ function build(){
   for(let d=1;d<=DAYS;d++){const td=document.createElement('td');td.id='dt'+d;tf.appendChild(td);}
   tb.appendChild(tf);buildNotesRow(tb);recalc();
 }
+
 function getCustomSettings(){try{return JSON.parse(_ls.getItem('dhulhijja_csettings')||'null');}catch(e){return null;}}
 function saveCustomSettings(arr){_ls.setItem('dhulhijja_csettings',JSON.stringify(arr));}
 function buildCustomSettings(){
@@ -275,18 +271,18 @@ function buildCustomSettings(){
       row.innerHTML=`<span class="custom-label">${def.ibada}</span><div style="display:flex;gap:4px">${btnsHtml}</div><span class="custom-pts" id="cp_${i}">= ${pts} نقطة</span>`;
     }else{
       const val=saved?saved[i]:def.defaultVal;
-      const pts=Math.floor(val/(def.ptsDiv||1))*def.ptsPerUnit;
+      const pts=(def.minVal&&val<def.minVal)?0:(val/(def.ptsDiv||1))*def.ptsPerUnit;
       const noteHtml=def.note?'<div style="font-size:9px;color:#856404">'+def.note+'</div>':'';
       row.innerHTML=`<span class="custom-label">${def.ibada}${noteHtml}</span><input type="number" class="custom-inp" id="ci_${i}" value="${val}" min="0" max="${def.max||999}" placeholder="${def.defaultVal||0}"><span class="custom-unit">${def.unit||''}</span><span class="custom-pts" id="cp_${i}">= ${pts} نقطة</span>`;
       box.appendChild(row);
       const inp=document.getElementById('ci_'+i);
       inp.oninput=function(){
         const n=parseInt(this.value)||0;
-        const def2=CUSTOM_DEFS[i];const p=Math.floor(n/(def2.ptsDiv||1))*def2.ptsPerUnit;
+        const def2=CUSTOM_DEFS[i];const p=(def2.minVal&&n<def2.minVal)?0:(n/(def2.ptsDiv||1))*def2.ptsPerUnit;
         document.getElementById('cp_'+i).textContent='= '+p+' نقطة';
         const arr=CUSTOM_DEFS.map((d,j)=>{if(d.type==='choice'){return saved?saved[j]:0;}const el=document.getElementById('ci_'+j);return el?parseInt(el.value)||0:(saved?saved[j]:0);});
         saveCustomSettings(arr);
-        ROWS.forEach((r,ri)=>{if(r.customIdx===i){r.pts=p;const el=document.getElementById('pts_'+ri);if(r.dynamicName){const n2=parseInt(document.getElementById('ci_'+i).value)||0;const ti=document.querySelector('#tbody tr:nth-child('+(ri+1)+') td.ic');if(ti)ti.textContent=n2+' '+r.ibada;}if(el)el.textContent=r.pts;}});
+        ROWS.forEach((r,ri)=>{if(r.customIdx===i){r.pts=p;const el=document.getElementById('pts_'+ri);if(el)el.textContent=r.pts;const trs=document.getElementById('tbody').rows;if(trs[ri]){const ti=trs[ri].querySelector('td.ic');if(ti){const _def=CUSTOM_DEFS[i];const _base=_def.baseName||r.ibada;ti.textContent=n+' '+_base;}}}});
         recalc();
       };return;
     }
@@ -304,7 +300,7 @@ function setChoice(ci,choiceIdx,pts){
 }
 function initCustomPts(){
   const saved=getCustomSettings();if(!saved)return;
-  ROWS.forEach((r,ri)=>{if(r.customIdx!==undefined){const def=CUSTOM_DEFS[r.customIdx];const val=saved[r.customIdx]||0;if(def.type==='choice'){r.pts=def.choices[val]?def.choices[val].pts:def.choices[0].pts;}else{r.pts=Math.floor(val/(def.ptsDiv||1))*def.ptsPerUnit;}}});
+  ROWS.forEach((r,ri)=>{if(r.customIdx!==undefined){const def=CUSTOM_DEFS[r.customIdx];const val=saved[r.customIdx]||0;if(def.type==='choice'){r.pts=def.choices[val]?def.choices[val].pts:def.choices[0].pts;}else{r.pts=(def.minVal&&val<def.minVal)?0:(val/(def.ptsDiv||1))*def.ptsPerUnit;}}});
 }
 function getDayTotals(){return Array.from({length:DAYS},(_,i)=>{let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,i+1)]||0)===1)t+=r.pts});return t;});}
 function recalc(){
@@ -408,22 +404,17 @@ async function submitDayNote(){
 function guestMode(){const sid=Math.random().toString(36).slice(2,8);window.open(location.href.split('?')[0]+'?sid='+sid,'_blank');}
 function getSiyamData(){try{return JSON.parse(_ls.getItem(SIYAMK)||'{}')}catch(e){return {};}}
 function saveSiyamData(d){_ls.setItem(SIYAMK,JSON.stringify(d));}
-function getSiyamPoints(){const d=getSiyamData();let t=0;for(let day=1;day<=9;day++)if(d["siyam-"+day]||d['read-'+day])t+=10;return t;}
+function getSiyamPoints(){const d=getSiyamData();let t=0;for(let day=1;day<=9;day++)if(d['siyam-'+day])t+=10;return t;}
 
 const AK='dhulhijja_amal_v1';
 function getAmalDone(){try{return JSON.parse(_ls.getItem(AK)||'{}')}catch(e){return {};}}
 function toggleAmal(){const body=document.getElementById('amalBody');const arr=document.getElementById('amalArr');const open=body.style.display==='block';body.style.display=open?'none':'block';arr.textContent=open?'▼':'▲';if(!open)buildAmal();}
 function buildAmal(){
   const body=document.getElementById('amalBody');const done=getAmalDone();body.innerHTML='';
-  // ترتيب: الـ 10 نقاط أول ثم الـ 5
-  const sorted=[...AMAL.map((a,i)=>({...a,i}))].sort((a,b)=>b.pts-a.pts);
-  sorted.forEach(({i,pts,name,hadith})=>{
-    const isDone=!!done[i];const is10=pts>=10;
-    const div=document.createElement('div');div.className='amal-item'+(isDone?' done':'');
-    if(is10&&!isDone) div.style.cssText='background:#fffdf0;border-color:#f0c040';
-    if(is10&&isDone) div.style.cssText='background:#fff8e1;border-color:#f0c040';
-    div.innerHTML=`<div class="amal-check">${isDone?'✓':''}</div><div class="amal-info"><div class="amal-name">${is10?'🌟 ':''}${name}</div>${hadith?`<div class="amal-hadith">${hadith}</div>`:''}</div><div class="amal-pts" style="${is10?'color:#b8860b':''}">${pts} نقاط</div>`;
-    div.onclick=()=>{const d=getAmalDone();if(d[i]){delete d[i];_ls.setItem(AK,JSON.stringify(d));buildAmal();recalc();showToast('تم إلغاء: '+name);}else{d[i]=true;_ls.setItem(AK,JSON.stringify(d));buildAmal();recalc();showToast('✓ '+name+' — '+pts+' نقاط');}};
+  AMAL.forEach((a,i)=>{
+    const isDone=!!done[i];const div=document.createElement('div');div.className='amal-item'+(isDone?' done':'');
+    div.innerHTML=`<div class="amal-check">${isDone?'✓':''}</div><div class="amal-info"><div class="amal-name">${a.name}</div>${a.hadith?`<div class="amal-hadith">${a.hadith}</div>`:''}</div><div class="amal-pts">${a.pts} نقاط</div>`;
+    div.onclick=()=>{const d=getAmalDone();if(d[i]){delete d[i];_ls.setItem(AK,JSON.stringify(d));buildAmal();recalc();showToast('تم إلغاء: '+a.name);}else{d[i]=true;_ls.setItem(AK,JSON.stringify(d));buildAmal();recalc();showToast('✓ '+a.name+' — '+a.pts+' نقاط');}};
     body.appendChild(div);
   });
 }
@@ -450,78 +441,48 @@ function selectSiyamDay(day){currentSiyamDay=day;buildSiyam();}
 function buildSiyam(){
   const body=document.getElementById('siyamBody');if(!body)return;
   const data=getSiyamData();body.innerHTML='';
-  // day chooser
   const chooser=document.createElement('div');chooser.style.cssText='display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px';
   for(let day=1;day<=9;day++){
     const b=document.createElement('button');b.type='button';b.textContent='اليوم '+day;
     const active=day===currentSiyamDay;
-    const done=data['siyam-'+day]||data['read-'+day];
+    const done=!!data['siyam-'+day];
     b.style.cssText='font-family:inherit;font-size:11px;font-weight:700;padding:7px 4px;border-radius:8px;cursor:pointer;border:1.5px solid '+(active?'var(--gD)':done?'var(--gM)':'var(--bd)')+';background:'+(active?'var(--gD)':done?'var(--gL)':'#fff')+';color:'+(active?'#fff':done?'var(--gD)':'var(--tx)');
     b.onclick=function(){selectSiyamDay(day);};chooser.appendChild(b);
   }
   body.appendChild(chooser);
   const day=currentSiyamDay;
-  const siyamKey='siyam-'+day;const readKey='read-'+day;const noteKey='readNote-'+day;
-  const isFasting=!!data[siyamKey];const isRead=!!data[readKey];const savedNote=data[noteKey]||'';
-  const earned=isFasting||isRead;
-  // siyam option
-  const siyamDiv=document.createElement('div');siyamDiv.className='amal-item'+(isFasting?' done':'');siyamDiv.style.margin='0 0 8px 0';
+  const siyamKey='siyam-'+day;
+  const isFasting=!!data[siyamKey];
+  const siyamDiv=document.createElement('div');siyamDiv.className='amal-item'+(isFasting?' done':'');
   siyamDiv.innerHTML='<div class="amal-check">'+(isFasting?'✓':'')+'</div>'
-    +'<div class="amal-info"><div class="amal-name">🌙 صيام اليوم '+day+'</div>'
-    +'<div style="font-size:9px;color:#b8860b;margin-top:3px">🔄 بديل: قراءة اسم من أسماء الله الحسنى من كتاب "لأنك الله"</div>'
-    +'</div>'
+    +'<div class="amal-info"><div class="amal-name">🌙 صيام اليوم '+day+'</div></div>'
     +'<div class="amal-pts">10 نقاط</div>';
   siyamDiv.onclick=()=>{
     const d=getSiyamData();
     if(d[siyamKey]){delete d[siyamKey];showToast('تم إلغاء صيام اليوم '+day);}
-    else{d[siyamKey]=true;delete d[readKey];showToast('✓ صيام اليوم '+day+' — 10 نقاط');}
+    else{d[siyamKey]=true;showToast('✓ صيام اليوم '+day+' — 10 نقاط');}
     saveSiyamData(d);buildSiyam();recalc();
   };
   body.appendChild(siyamDiv);
-  // divider
-  const orDiv=document.createElement('div');orDiv.style.cssText='text-align:center;font-size:11px;color:var(--mu);margin:4px 0 8px;font-weight:700';orDiv.textContent='— أو —';
-  body.appendChild(orDiv);
-  // reading option
-  const readBox=document.createElement('div');readBox.style.cssText='border:1px solid var(--bd);border-radius:10px;background:'+(isRead?'var(--gL)':'#fffdf7')+';overflow:hidden;margin-bottom:8px';
-  const readHead=document.createElement('div');readHead.style.cssText='background:'+(isRead?'var(--gD)':'#e8f4fd')+';color:'+(isRead?'#fff':'#1a4a8a')+';font-size:12px;font-weight:700;padding:9px 10px;line-height:1.6;cursor:pointer';
-  readHead.innerHTML='<div style="display:flex;align-items:center;gap:8px"><div class="amal-check" style="width:20px;height:20px;border-radius:50%;border:2px solid '+(isRead?'#fff':'#1a4a8a')+';display:flex;align-items:center;justify-content:center;font-size:11px;background:'+(isRead?'rgba(255,255,255,0.3)':'transparent')+';color:'+(isRead?'#fff':'#1a4a8a')+';flex-shrink:0">'+(isRead?'✓':'')+'</div><div><div>📖 قراءة من كتاب "لأنك الله"</div><div style="font-size:10px;font-weight:400;opacity:.85">عن أسماء الله الحسنى — 10 نقاط</div></div></div>';
-  readHead.onclick=()=>{
-    const d=getSiyamData();
-    if(d[readKey]){delete d[readKey];showToast('تم إلغاء القراءة اليوم '+day);}
-    else{d[readKey]=true;delete d[siyamKey];showToast('✓ قراءة اليوم '+day+' — 10 نقاط');}
-    saveSiyamData(d);buildSiyam();recalc();
-  };
-  readBox.appendChild(readHead);
-  // note textarea — تظهر دايماً تحت خيار القراءة
-  const noteWrap=document.createElement('div');noteWrap.style.cssText='padding:8px 10px 10px 10px';
-  const noteLabel=document.createElement('div');noteLabel.style.cssText='font-size:11px;color:#7a6a52;margin-bottom:5px';noteLabel.textContent='✍️ دوّني أجمل ما قرأتِ اليوم:';
-  const noteTA=document.createElement('textarea');noteTA.value=savedNote;noteTA.placeholder='اكتبي هنا ما أثّر في قلبكِ من أسماء الله...';
-  noteTA.style.cssText='width:100%;border:1.5px solid var(--bd);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:12px;resize:none;height:70px;outline:none;direction:rtl;background:var(--sf);color:var(--tx)';
-  noteTA.oninput=function(){const d=getSiyamData();d[noteKey]=this.value;saveSiyamData(d);};
-  noteWrap.appendChild(noteLabel);noteWrap.appendChild(noteTA);readBox.appendChild(noteWrap);
-  body.appendChild(readBox);
-  // points summary
-  const pts=document.createElement('div');pts.style.cssText='text-align:center;font-size:12px;font-weight:700;color:'+(earned?'var(--gD)':'var(--mu)')+';padding:4px 0';
-  pts.textContent=earned?'✓ مسجّلة 10 نقاط لهذا اليوم':'لم يُسجَّل شيء لهذا اليوم بعد';
+  const pts=document.createElement('div');pts.style.cssText='text-align:center;font-size:12px;font-weight:700;color:'+(isFasting?'var(--gD)':'var(--mu)')+';padding:8px 0';
+  pts.textContent=isFasting?'✓ مسجّلة 10 نقاط لهذا اليوم':'لم يُسجَّل شيء لهذا اليوم بعد';
   body.appendChild(pts);
 }
+
 function buildSiyamReportHtml(data,points){
   let rows='';
   for(let d=1;d<=9;d++){
-    const fasted=!!data['siyam-'+d];const read=!!data['read-'+d];const note=data['readNote-'+d]||'';
-    const earned=fasted||read;
-    rows+='<div style="border:1px solid #e2d9c8;border-radius:8px;padding:8px 10px;margin-bottom:6px;background:'+(earned?'#f0f9f4':'#fafaf8')+'">'
-      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:'+(note?'6':'0')+'px">'
+    const fasted=!!data['siyam-'+d];
+    rows+='<div style="border:1px solid #e2d9c8;border-radius:8px;padding:8px 10px;margin-bottom:6px;background:'+(fasted?'#f0f9f4':'#fafaf8')+'">'
+      +'<div style="display:flex;align-items:center;gap:8px">'
       +'<div style="font-size:12px;font-weight:700;color:#2c2416">اليوم '+d+'</div>';
     if(fasted) rows+='<span style="background:#d4f4e2;color:#1a6b3c;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">🌙 صائمة — 10 نقاط</span>';
-    else if(read) rows+='<span style="background:#e8f4fd;color:#1a4a8a;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">📖 قرأت — 10 نقاط</span>';
     else rows+='<span style="background:#f0f0f0;color:#aaa;font-size:10px;padding:2px 8px;border-radius:10px">لم يُسجَّل</span>';
-    rows+='</div>';
-    if(note) rows+='<div style="font-size:11px;color:#7a6a52;background:#fffdf0;border:1px solid #f0c040;border-radius:6px;padding:6px 8px;line-height:1.6">✍️ '+note+'</div>';
-    rows+='</div>';
+    rows+='</div></div>';
   }
-  return '<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:8px">🌙 الصيام / قراءة أسماء الله الحسنى — '+points+' نقطة</div>'+rows+'</div>';
+  return '<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:8px">🌙 الصيام — '+points+' نقطة</div>'+rows+'</div>';
 }
+
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 document.getElementById('userName').addEventListener('input',save);
 initCustomPts();load();build();buildCustomSettings();buildDuaa();buildSiyam();
