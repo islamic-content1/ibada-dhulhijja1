@@ -277,7 +277,19 @@ function build(){
   });
   const tf=document.createElement('tr');tf.className='tr-day';const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=3;lbl.textContent='مجموع اليوم';tf.appendChild(lbl);
   for(let d=1;d<=DAYS;d++){const td=document.createElement('td');td.id='dt'+d;tf.appendChild(td);}
-  tb.appendChild(tf);buildNotesRow(tb);recalc();
+  tb.appendChild(tf);buildNotesRow(tb);buildDayPctRow(tb);recalc();
+}
+function buildDayPctRow(tb){
+  const tr=document.createElement('tr');
+  const lbl=document.createElement('td');lbl.className='lbl';lbl.colSpan=3;
+  lbl.style.cssText='background:#e8f6ee;color:var(--gD);font-size:10px;font-weight:700;text-align:right;padding-right:8px;border-top:2px solid var(--gM)';
+  lbl.textContent='معدل اليوم من 100';tr.appendChild(lbl);
+  for(let d=1;d<=DAYS;d++){
+    const td=document.createElement('td');td.id='dpct'+d;
+    td.style.cssText='text-align:center;font-size:10px;font-weight:700;color:var(--gD);background:#f0faf5;border:1px solid #c8e8d4;border-top:2px solid var(--gM);padding:3px 1px';
+    td.textContent='—';tr.appendChild(td);
+  }
+  tb.appendChild(tr);
 }
 function getCustomSettings(){try{return JSON.parse(_ls.getItem('dhulhijja_csettings')||'null');}catch(e){return null;}}
 function saveCustomSettings(arr){_ls.setItem('dhulhijja_csettings',JSON.stringify(arr));}
@@ -309,9 +321,24 @@ function initCustomPts(){
 }
 function getDayTotals(){return Array.from({length:DAYS},(_,i)=>{let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,i+1)]||0)===1)t+=r.pts});return t;});}
 
-// ✅ الحد الأقصى لليوم الواحد = نقاط الجدول + 10 صيام + 5 أعمال صالحة + 3 دعاء
+// الحد الأقصى لليوم = نقاط الجدول (حسب كمياتها) + 10 صيام + 3 دعاء
 function calcDayMax(){
   return ROWS.reduce((s,r)=>s+r.pts,0) + 10 + 3;
+}
+
+// نقاط يوم محدد شاملة الصيام والدعاء لذلك اليوم
+function calcDayTotal(d){
+  // نقاط الجدول
+  let total=0;
+  ROWS.forEach((r,ri)=>{if((state[sk(ri,d)]||0)===1)total+=r.pts;});
+  // صيام هداك اليوم
+  const siyam=getSiyamData();
+  if(siyam['siyam-'+d]||siyam['read-'+d])total+=10;
+  // دعاء هداك اليوم — لو عاملة الثلاثة
+  const duaa=getDuaaDone();
+  const duaaDay=DUAA_ITEMS.reduce((s,it)=>s+(duaa[d+'-'+it.key]?it.pts:0),0);
+  total+=duaaDay;
+  return total;
 }
 
 function recalc(){
@@ -328,18 +355,35 @@ function recalc(){
   document.getElementById('filledVal').textContent=filled+'/'+DAYS;
   document.getElementById('avgVal').textContent=filled>0?(grand/filled).toFixed(1):'—';
 
-  // ✅ معدل اليوم من 100 = متوسط نقاط الأيام المعبأة ÷ الحد الأقصى لليوم × 100
+  // ✅ معدل كل يوم منفصل في صف الجدول
   const dayMax=calcDayMax();
-  if(filled>0){
-    const dayAvg=grand/filled;
-    const pctDay=Math.min(100,Math.round(dayAvg/dayMax*100));
-    document.getElementById('pctDayVal').textContent=pctDay+'%';
+  let pctDaySum=0,pctDayCount=0;
+  for(let d=1;d<=DAYS;d++){
+    const el=document.getElementById('dpct'+d);if(!el)continue;
+    // تحقق إذا في أي تسجيل لهداك اليوم
+    const hasData=ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0);
+    if(hasData){
+      const dayTotal=calcDayTotal(d);
+      const pct=Math.min(100,Math.round(dayTotal/dayMax*100));
+      el.textContent=pct+'%';
+      // لون حسب النسبة
+      el.style.color=pct>=80?'var(--gD)':pct>=50?'#b8860b':'var(--rD)';
+      pctDaySum+=pct;pctDayCount++;
+    } else {
+      el.textContent='—';el.style.color='var(--mu)';
+    }
+  }
+
+  // ✅ معدل اليوم من 100 = متوسط معدلات الأيام المعبأة
+  if(pctDayCount>0){
+    document.getElementById('pctDayVal').textContent=Math.round(pctDaySum/pctDayCount)+'%';
   } else {
     document.getElementById('pctDayVal').textContent='—';
   }
 
   // ✅ معدل 9 أيام من 100 = المجموع الكلي ÷ (الحد الأقصى × 9) × 100
-  const pctTotal=Math.min(100,Math.round(grand/(dayMax*DAYS)*100));
+  const grandWithSiyamDuaa=grand; // المجموع الكلي شامل كل شيء
+  const pctTotal=Math.min(100,Math.round(grandWithSiyamDuaa/(dayMax*DAYS)*100));
   document.getElementById('pctTotalVal').textContent=pctTotal+'%';
 }
 
