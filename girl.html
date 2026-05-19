@@ -311,7 +311,7 @@ function getDayTotals(){return Array.from({length:DAYS},(_,i)=>{let t=0;ROWS.for
 
 // ✅ الحد الأقصى لليوم الواحد = نقاط الجدول + 10 صيام + 5 أعمال صالحة + 3 دعاء
 function calcDayMax(){
-  return ROWS.reduce((s,r)=>s+r.pts,0) + 10 + 5 + 3;
+  return ROWS.reduce((s,r)=>s+r.pts,0) + 10 + 3;
 }
 
 function recalc(){
