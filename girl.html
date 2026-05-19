@@ -119,17 +119,12 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--gDD);font-s
   <div class="sc"><div class="sl">المعدل</div><div class="sv" id="avgVal">—</div></div>
   <div class="sc"><div class="sl">الأيام</div><div class="sv" id="filledVal">0/9</div></div>
 </div>
-<!-- صف 2: معدل اليوم من 100، معدل 9 أيام من 100 -->
+<!-- مربع معدل اليوم من 100 -->
 <div class="gc2">
-  <div class="sc pct-box">
+  <div class="sc pct-box" style="grid-column:1/-1">
     <div class="sl">📊 معدل اليوم من 100</div>
     <div class="sv" id="pctDayVal">—</div>
-    <div style="font-size:9px;color:var(--mu);margin-top:3px">متوسط الأيام المعبأة</div>
-  </div>
-  <div class="sc pct-box">
-    <div class="sl">🏆 معدل 9 أيام من 100</div>
-    <div class="sv" id="pctTotalVal">—</div>
-    <div style="font-size:9px;color:var(--mu);margin-top:3px">من كامل العشرة</div>
+    <div style="font-size:9px;color:var(--mu);margin-top:3px">متوسط معدلات الأيام المعبأة</div>
   </div>
 </div>
 <div id="noteModal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.45);align-items:center;justify-content:center">
@@ -380,11 +375,6 @@ function recalc(){
   } else {
     document.getElementById('pctDayVal').textContent='—';
   }
-
-  // ✅ معدل 9 أيام من 100 = المجموع الكلي ÷ (الحد الأقصى × 9) × 100
-  const grandWithSiyamDuaa=grand; // المجموع الكلي شامل كل شيء
-  const pctTotal=Math.min(100,Math.round(grandWithSiyamDuaa/(dayMax*DAYS)*100));
-  document.getElementById('pctTotalVal').textContent=pctTotal+'%';
 }
 
 async function sendToManager(){
@@ -411,7 +401,6 @@ function openReport(){
   const avg=filled>0?(grand/filled).toFixed(1):'—';
   const dayMax=calcDayMax();
   const pctDay=filled>0?Math.min(100,Math.round((grand/filled)/dayMax*100))+'%':'—';
-  const pctTotal=Math.min(100,Math.round(grand/(dayMax*DAYS)*100))+'%';
   const maxVal=Math.max(...dt,1);
   const CAT_COLORS={'الأذكار':'#2d8a52','القرآن':'#1a6b8a','القيام':'#6b3a8a','الصلاة':'#c47a1a','الذكر':'#8a2d2d'};
   const bars=dt.map((v,i)=>{const h=maxVal>0?Math.round((v/maxVal)*110):0;const col=v===0?'#e2d9c8':v>=maxVal*0.8?'#1a6b3c':v>=maxVal*0.5?'#5cb87a':'#a8e6c0';return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:9px;font-weight:700;color:#1a6b3c">'+(v>0?v:'')+'</div><div style="width:75%;background:'+col+';border-radius:4px 4px 0 0;height:'+h+'px;min-height:2px"></div><div style="font-size:9px;color:#7a6a52">'+(i+1)+'</div></div>';}).join('');
@@ -447,7 +436,7 @@ function openReport(){
   const duaaHtml='<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:8px">🤲 خانة الدعاء — '+duaaPoints+' نقطة</div>'+duaaRows+'</div>';
   const rHtml='<div style="background:linear-gradient(135deg,#0f4a28,#1a6b3c);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:#a8e6c0;margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:700">تقرير عبادة عشر ذي الحجة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
   +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px"><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+grand+'</div><div style="font-size:10px;color:#7a6a52">المجموع</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+avg+'</div><div style="font-size:10px;color:#7a6a52">المعدل</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+filled+'<span style="font-size:14px;color:#7a6a52">/'+DAYS+'</span></div><div style="font-size:10px;color:#7a6a52">الأيام</div></div></div>'
-  +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.2rem"><div style="background:linear-gradient(135deg,#f0faf5,#e0f5ea);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--gM)"><div style="font-size:22px;font-weight:700;color:#0f4a28">'+pctDay+'</div><div style="font-size:10px;color:#7a6a52">📊 معدل اليوم من 100</div></div><div style="background:linear-gradient(135deg,#f0faf5,#e0f5ea);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--gM)"><div style="font-size:22px;font-weight:700;color:#0f4a28">'+pctTotal+'</div><div style="font-size:10px;color:#7a6a52">🏆 معدل 9 أيام من 100</div></div></div>'
+  +'<div style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:1.2rem"><div style="background:linear-gradient(135deg,#f0faf5,#e0f5ea);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--gM)"><div style="font-size:22px;font-weight:700;color:#0f4a28">'+pctDay+'</div><div style="font-size:10px;color:#7a6a52">📊 معدل اليوم من 100</div></div></div>'
   +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:12px">📊 الأداء اليومي</div><div style="display:flex;gap:4px;align-items:flex-end;height:130px">'+bars+'</div></div>'
   +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:12px">📋 تفصيل العبادات</div>'+catsHtml+'</div>'
   +amalHtml+duaaHtml+buildSiyamReportHtml(siyamData,siyamPoints)
