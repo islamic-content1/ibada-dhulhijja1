@@ -48,12 +48,13 @@ td.cell.done{background:var(--gL);color:var(--gD)}
 td.cell.miss{background:var(--rL);color:var(--rD)}
 tr.tr-day td{background:var(--gD);color:#fff;font-weight:700;font-size:12px;padding:7px 3px;text-align:center;border-top:2px solid var(--gM)}
 tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--gDD);font-size:11px}
-.gc{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
+.gc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px}
+.gc2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
 .sc{background:var(--sf);border-radius:10px;padding:10px;text-align:center;border:1px solid var(--bd);box-shadow:var(--sh)}
+.sc.pct-box{border-color:var(--gM);background:linear-gradient(135deg,#f0faf5,#e0f5ea)}
+.sc.pct-box .sv{color:var(--gDD);font-size:20px}
 .sl{font-size:11px;color:var(--mu);margin-bottom:2px}
 .sv{font-size:22px;font-weight:700;color:var(--gD);line-height:1}
-.sc.pct-box{border-color:var(--gM);background:linear-gradient(135deg,#f0faf5,#e0f5ea)}
-.sc.pct-box .sv{color:var(--gDD)}
 .btns{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
 .btn{font-family:inherit;font-size:13px;font-weight:600;padding:11px;border-radius:8px;cursor:pointer;border:none;transition:background .15s;width:100%;text-align:center}
 .btn-send{background:var(--gD);color:#fff}.btn-send:hover{background:var(--gDD)}
@@ -65,7 +66,7 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--gDD);font-s
 .status-bar.err{background:var(--rL);color:var(--rD)}
 .amal-box{background:#fff;border:1.5px solid var(--gM);border-radius:12px;margin-bottom:1rem;overflow:hidden}
 .amal-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--gD);color:#fff;cursor:pointer;font-size:13px;font-weight:700}
-.amal-hdr .arr{font-size:11px;transition:transform .2s}
+.amal-hdr .arr{font-size:11px}
 .amal-body{display:none;padding:10px 12px}
 .amal-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;background:#f8fbf8;border:1px solid var(--bd);margin-bottom:6px;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
 .amal-item.done{background:var(--gL);border-color:var(--gM);cursor:default}
@@ -112,12 +113,24 @@ tr.tr-day td.lbl{text-align:right;padding-right:8px;background:var(--gDD);font-s
     <tbody id="tbody"></tbody>
   </table>
 </div>
-<!-- ✅ مربع رابع "من 100" -->
+<!-- صف 1: المجموع، المعدل، الأيام -->
 <div class="gc">
   <div class="sc"><div class="sl">المجموع</div><div class="sv" id="grandVal">0</div></div>
   <div class="sc"><div class="sl">المعدل</div><div class="sv" id="avgVal">—</div></div>
   <div class="sc"><div class="sl">الأيام</div><div class="sv" id="filledVal">0/9</div></div>
-  <div class="sc pct-box"><div class="sl">من 100</div><div class="sv" id="pctVal">—</div></div>
+</div>
+<!-- صف 2: معدل اليوم من 100، معدل 9 أيام من 100 -->
+<div class="gc2">
+  <div class="sc pct-box">
+    <div class="sl">📊 معدل اليوم من 100</div>
+    <div class="sv" id="pctDayVal">—</div>
+    <div style="font-size:9px;color:var(--mu);margin-top:3px">متوسط الأيام المعبأة</div>
+  </div>
+  <div class="sc pct-box">
+    <div class="sl">🏆 معدل 9 أيام من 100</div>
+    <div class="sv" id="pctTotalVal">—</div>
+    <div style="font-size:9px;color:var(--mu);margin-top:3px">من كامل العشرة</div>
+  </div>
 </div>
 <div id="noteModal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.45);align-items:center;justify-content:center">
   <div style="background:var(--sf);border-radius:14px;width:90%;max-width:340px;overflow:hidden">
@@ -207,7 +220,7 @@ const AMAL=[
   {name:'رسالة شكر لمن له فضل عليكِ',pts:5,hadith:''},
   {name:'إدخال سرور على قلب طفل',pts:5,hadith:'قال رسول الله ﷺ: «الرَّاحمون يرحمهم الرحمن»'},
   {name:'حفظ صفحتين قرآن',pts:10,hadith:'قال رسول الله ﷺ: «خيرُكم من تعلَّم القرآن وعلَّمه»'},
-  {name:'حفظ ٥ أحاديث',pts:10,hadith:'قال رسول الله ﷺ: «نضَّرَ اللهُ امرأً سمعَ منَّا حديثًا فحفِظَه حتى يُبلِّغَه» — أي جعله الله ذا نورٍ وبهاء بسبب حفظه لحديث النبي ﷺ'},
+  {name:'حفظ ٥ أحاديث',pts:10,hadith:'قال رسول الله ﷺ: «نضَّرَ اللهُ امرأً سمعَ منَّا حديثًا فحفِظَه حتى يُبلِّغَه»'},
   {name:'فرضين جماعة',pts:10,hadith:'قال رسول الله ﷺ: صَلاةُ الجَمَاعَةِ أَفضَلُ مِنْ صَلاةِ الفَذِّ بِسَبْعٍ وَعِشْرِينَ دَرَجَةً'},
 ];
 const DUAAS=[
@@ -296,13 +309,9 @@ function initCustomPts(){
 }
 function getDayTotals(){return Array.from({length:DAYS},(_,i)=>{let t=0;ROWS.forEach((r,ri)=>{if((state[sk(ri,i+1)]||0)===1)t+=r.pts});return t;});}
 
-// ✅ دالة حساب الحد الأقصى بناءً على كميات البنت الحالية
-function calcMaxPossible(){
-  const rowsMax=ROWS.reduce((s,r)=>s+r.pts,0)*DAYS;
-  const amalMax=AMAL.reduce((s,a)=>s+a.pts,0);
-  const siyamMax=DAYS*10;
-  const duaaMax=DAYS*3;
-  return rowsMax+amalMax+siyamMax+duaaMax;
+// ✅ الحد الأقصى لليوم الواحد = نقاط الجدول + 10 صيام + 5 أعمال صالحة + 3 دعاء
+function calcDayMax(){
+  return ROWS.reduce((s,r)=>s+r.pts,0) + 10 + 5 + 3;
 }
 
 function recalc(){
@@ -313,13 +322,25 @@ function recalc(){
   grand+=getSiyamPoints();
   dt.forEach((v,i)=>{const el=document.getElementById('dt'+(i+1));if(el)el.textContent=v;});
   document.getElementById('grandVal').textContent=grand;
-  let filled=0;for(let d=1;d<=DAYS;d++)if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;
+
+  let filled=0;
+  for(let d=1;d<=DAYS;d++)if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;
   document.getElementById('filledVal').textContent=filled+'/'+DAYS;
   document.getElementById('avgVal').textContent=filled>0?(grand/filled).toFixed(1):'—';
-  // ✅ حساب المعدل من 100
-  const maxPossible=calcMaxPossible();
-  const pct=maxPossible>0?Math.min(100,Math.round(grand/maxPossible*100)):0;
-  document.getElementById('pctVal').textContent=pct+'%';
+
+  // ✅ معدل اليوم من 100 = متوسط نقاط الأيام المعبأة ÷ الحد الأقصى لليوم × 100
+  const dayMax=calcDayMax();
+  if(filled>0){
+    const dayAvg=grand/filled;
+    const pctDay=Math.min(100,Math.round(dayAvg/dayMax*100));
+    document.getElementById('pctDayVal').textContent=pctDay+'%';
+  } else {
+    document.getElementById('pctDayVal').textContent='—';
+  }
+
+  // ✅ معدل 9 أيام من 100 = المجموع الكلي ÷ (الحد الأقصى × 9) × 100
+  const pctTotal=Math.min(100,Math.round(grand/(dayMax*DAYS)*100));
+  document.getElementById('pctTotalVal').textContent=pctTotal+'%';
 }
 
 async function sendToManager(){
@@ -344,7 +365,9 @@ function openReport(){
   grand+=amalPoints+duaaPoints+siyamPoints;
   let filled=0;for(let d=1;d<=DAYS;d++){if(ROWS.some((_,ri)=>(state[sk(ri,d)]||0)!==0))filled++;}
   const avg=filled>0?(grand/filled).toFixed(1):'—';
-  const pct=Math.min(100,Math.round(grand/calcMaxPossible()*100))+'%';
+  const dayMax=calcDayMax();
+  const pctDay=filled>0?Math.min(100,Math.round((grand/filled)/dayMax*100))+'%':'—';
+  const pctTotal=Math.min(100,Math.round(grand/(dayMax*DAYS)*100))+'%';
   const maxVal=Math.max(...dt,1);
   const CAT_COLORS={'الأذكار':'#2d8a52','القرآن':'#1a6b8a','القيام':'#6b3a8a','الصلاة':'#c47a1a','الذكر':'#8a2d2d'};
   const bars=dt.map((v,i)=>{const h=maxVal>0?Math.round((v/maxVal)*110):0;const col=v===0?'#e2d9c8':v>=maxVal*0.8?'#1a6b3c':v>=maxVal*0.5?'#5cb87a':'#a8e6c0';return '<div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:2px"><div style="font-size:9px;font-weight:700;color:#1a6b3c">'+(v>0?v:'')+'</div><div style="width:75%;background:'+col+';border-radius:4px 4px 0 0;height:'+h+'px;min-height:2px"></div><div style="font-size:9px;color:#7a6a52">'+(i+1)+'</div></div>';}).join('');
@@ -379,7 +402,8 @@ function openReport(){
   }
   const duaaHtml='<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:8px">🤲 خانة الدعاء — '+duaaPoints+' نقطة</div>'+duaaRows+'</div>';
   const rHtml='<div style="background:linear-gradient(135deg,#0f4a28,#1a6b3c);color:#fff;padding:1.4rem;border-radius:14px;text-align:center;margin-bottom:1.2rem"><div style="font-size:13px;color:#a8e6c0;margin-bottom:4px">بسم الله الرحمن الرحيم</div><div style="font-size:20px;font-weight:700">تقرير عبادة عشر ذي الحجة</div><div style="font-size:13px;opacity:.8;margin-top:3px">'+name+'</div></div>'
-  +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:1.2rem"><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+grand+'</div><div style="font-size:10px;color:#7a6a52">المجموع</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+avg+'</div><div style="font-size:10px;color:#7a6a52">المعدل</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+filled+'<span style="font-size:14px;color:#7a6a52">/'+DAYS+'</span></div><div style="font-size:10px;color:#7a6a52">الأيام</div></div><div style="background:linear-gradient(135deg,#f0faf5,#e0f5ea);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--gM)"><div style="font-size:24px;font-weight:700;color:#0f4a28">'+pct+'</div><div style="font-size:10px;color:#7a6a52">من 100</div></div></div>'
+  +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px"><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+grand+'</div><div style="font-size:10px;color:#7a6a52">المجموع</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+avg+'</div><div style="font-size:10px;color:#7a6a52">المعدل</div></div><div style="background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #e2d9c8"><div style="font-size:24px;font-weight:700;color:#1a6b3c">'+filled+'<span style="font-size:14px;color:#7a6a52">/'+DAYS+'</span></div><div style="font-size:10px;color:#7a6a52">الأيام</div></div></div>'
+  +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.2rem"><div style="background:linear-gradient(135deg,#f0faf5,#e0f5ea);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--gM)"><div style="font-size:22px;font-weight:700;color:#0f4a28">'+pctDay+'</div><div style="font-size:10px;color:#7a6a52">📊 معدل اليوم من 100</div></div><div style="background:linear-gradient(135deg,#f0faf5,#e0f5ea);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--gM)"><div style="font-size:22px;font-weight:700;color:#0f4a28">'+pctTotal+'</div><div style="font-size:10px;color:#7a6a52">🏆 معدل 9 أيام من 100</div></div></div>'
   +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:12px">📊 الأداء اليومي</div><div style="display:flex;gap:4px;align-items:flex-end;height:130px">'+bars+'</div></div>'
   +'<div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #e2d9c8;margin-bottom:1.2rem"><div style="font-size:13px;font-weight:700;color:#1a6b3c;margin-bottom:12px">📋 تفصيل العبادات</div>'+catsHtml+'</div>'
   +amalHtml+duaaHtml+buildSiyamReportHtml(siyamData,siyamPoints)
@@ -413,8 +437,8 @@ function buildAmal(){
   sorted.forEach(({i,pts,name,hadith})=>{
     const isDone=!!done[i];const is10=pts>=10;
     const div=document.createElement('div');div.className='amal-item'+(isDone?' done':'');
-    if(is10&&!isDone) div.style.cssText='background:#fffdf0;border-color:#f0c040';
-    if(is10&&isDone) div.style.cssText='background:#fff8e1;border-color:#f0c040';
+    if(is10&&!isDone)div.style.cssText='background:#fffdf0;border-color:#f0c040';
+    if(is10&&isDone)div.style.cssText='background:#fff8e1;border-color:#f0c040';
     div.innerHTML=`<div class="amal-check">${isDone?'✓':''}</div><div class="amal-info"><div class="amal-name">${is10?'🌟 ':''}${name}</div>${hadith?`<div class="amal-hadith">${hadith}</div>`:''}</div><div class="amal-pts" style="${is10?'color:#b8860b':''}">${pts} نقاط</div>`;
     div.onclick=()=>{const d=getAmalDone();if(d[i]){delete d[i];_ls.setItem(AK,JSON.stringify(d));buildAmal();recalc();showToast('تم إلغاء: '+name);}else{d[i]=true;_ls.setItem(AK,JSON.stringify(d));buildAmal();recalc();showToast('✓ '+name+' — '+pts+' نقاط');}};
     body.appendChild(div);
@@ -485,8 +509,7 @@ function buildSiyamReportHtml(data,points){
   for(let d=1;d<=9;d++){
     const fasted=!!data['siyam-'+d];const read=!!data['read-'+d];const note=data['readNote-'+d]||'';const earned=fasted||read;
     rows+='<div style="border:1px solid #e2d9c8;border-radius:8px;padding:8px 10px;margin-bottom:6px;background:'+(earned?'#f0f9f4':'#fafaf8')+'">'
-      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:'+(note?'6':'0')+'px">'
-      +'<div style="font-size:12px;font-weight:700;color:#2c2416">اليوم '+d+'</div>';
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:'+(note?'6':'0')+'px"><div style="font-size:12px;font-weight:700;color:#2c2416">اليوم '+d+'</div>';
     if(fasted)rows+='<span style="background:#d4f4e2;color:#1a6b3c;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">🌙 صائمة — 10 نقاط</span>';
     else if(read)rows+='<span style="background:#e8f4fd;color:#1a4a8a;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">📖 قرأت — 10 نقاط</span>';
     else rows+='<span style="background:#f0f0f0;color:#aaa;font-size:10px;padding:2px 8px;border-radius:10px">لم يُسجَّل</span>';
