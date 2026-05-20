@@ -152,6 +152,14 @@ function customLabel(g,i){const def=CUSTOM_DEFS[i];if(!def)return '';return def.
 function rowPts(g,r){if(r.customIdx==null)return r.pts;const def=CUSTOM_DEFS[r.customIdx];return Math.floor(getCustomValue(g,r.customIdx)/(def.ptsDiv||1))*def.ptsPerUnit;}
 function rowName(g,r){if(r.customIdx==null)return r.ibada;const def=CUSTOM_DEFS[r.customIdx];const v=getCustomValue(g,r.customIdx);if(r.dynamicName)return v+' '+r.ibada;return r.ibada+' — '+v+' '+def.unit;}
 function rowEarned(g,ri){const r=ROWS[ri],pts=rowPts(g,r);let t=0;for(let d=1;d<=DAYS;d++)if(((g.state||{})[sk(ri,d)]||0)===1)t+=pts;return t;}
+
+function rankNumber(list,index,scoreKey){
+  const score=list[index]&&Number(list[index][scoreKey]);
+  return 1+list.filter((x,idx)=>idx<index && Number(x[scoreKey])>score).length;
+}
+function rankMedal(rank){return rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'#'+rank;}
+function rankItemClass(rank){return rank===1?'t1':rank===2?'t2':rank===3?'t3':'';}
+function rankNumClass(rank){return rank===1?'r1':rank===2?'r2':rank===3?'r3':'';}
 function calcDayMaxForGirl(g){return ROWS.reduce((s,r)=>s+rowPts(g,r),0)+10+3;}
 function calcGirlDayTotal(g,d){
   let t=0;
@@ -206,9 +214,10 @@ function render(){
   // ترتيب المجموع
   html+='<div class="card"><div class="card-t">🏅 الترتيب حسب المجموع الكلي</div>';
   sorted.forEach((g,i)=>{
-    const cls=i===0?'t1':i===1?'t2':i===2?'t3':'';const ncls=i===0?'r1':i===1?'r2':i===2?'r3':'';
-    const medals=['🥇','🥈','🥉'];const pct=Math.round(g.grand/maxG*100);
-    html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+(i<3?medals[i]:i+1)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">مجموع: '+g.grand+' | معدل: '+g.avg+' | أيام: '+g.filled+'/9</div><div class="rtrack"><div class="rfill" style="width:'+pct+'%"></div></div></div><div class="rpts">'+g.grand+'</div></div>';
+    const rnk=rankNumber(sorted,i,'grand');
+    const cls=rankItemClass(rnk);const ncls=rankNumClass(rnk);
+    const pct=Math.round(g.grand/maxG*100);
+    html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+rankMedal(rnk)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">مجموع: '+g.grand+' | معدل: '+g.avg+' | أيام: '+g.filled+'/9</div><div class="rtrack"><div class="rfill" style="width:'+pct+'%"></div></div></div><div class="rpts">'+g.grand+'</div></div>';
   });
   html+='</div>';
 
@@ -221,10 +230,10 @@ function render(){
   if(withPct.length===0){html+='<div style="font-size:11px;color:#aaa;padding:8px">لا يوجد بيانات بعد</div>';}
   else{
     withPct.forEach((g,i)=>{
-      const cls=i===0?'t1':i===1?'t2':i===2?'t3':'';const ncls=i===0?'r1':i===1?'r2':i===2?'r3':'';
-      const medals=['🥇','🥈','🥉'];
+      const rnk=rankNumber(withPct,i,'dayPct');
+      const cls=rankItemClass(rnk);const ncls=rankNumClass(rnk);
       const pctColor=g.dayPct>=80?'var(--gD)':g.dayPct>=50?'#b8860b':'var(--rD)';
-      html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+(i<3?medals[i]:i+1)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">مجموع: '+g.grand+' | أيام: '+g.filled+'/9</div><div class="rtrack"><div class="rfill" style="width:'+g.dayPct+'%"></div></div></div><div class="rpts" style="color:'+pctColor+'">'+g.dayPct+'%</div></div>';
+      html+='<div class="rank-item '+cls+'"><div class="rnum '+ncls+'">'+rankMedal(rnk)+'</div><div class="rinfo"><div class="rname">'+esc(g.name)+'</div><div class="rmeta">مجموع: '+g.grand+' | أيام: '+g.filled+'/9</div><div class="rtrack"><div class="rfill" style="width:'+g.dayPct+'%"></div></div></div><div class="rpts" style="color:'+pctColor+'">'+g.dayPct+'%</div></div>';
     });
   }
   html+='</div></div>';
@@ -244,7 +253,7 @@ function perIbadaRanking(){
       const ranked=girlsData.map(g=>({name:g.name,total:rowEarned(g,ri)})).filter(x=>x.total>0).sort((a,b)=>b.total-a.total);
       html+='<div class="ibada-rank"><div class="ibada-rank-title">'+esc(r.ibada)+'</div>';
       if(!ranked.length)html+='<span style="font-size:10px;color:#aaa">لا يوجد إنجاز بعد</span>';
-      ranked.forEach((x,i)=>{html+='<span class="rank-chip '+(i===0?'first':'')+'">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.')+' <b>'+esc(x.name)+'</b> <span style="color:var(--gD);font-weight:700">'+x.total+'</span></span>';});
+      ranked.forEach((x,i)=>{const rnk=rankNumber(ranked,i,'total');html+='<span class="rank-chip '+(rnk===1?'first':'')+'">'+(rnk<=3?rankMedal(rnk):rnk+'.')+' <b>'+esc(x.name)+'</b> <span style="color:var(--gD);font-weight:700">'+x.total+'</span></span>';});
       html+='</div>';
     });
     html+='</div>';
@@ -254,8 +263,8 @@ function perIbadaRanking(){
 
 function girlCard(g,gi,sorted,maxG){
   const pct=maxG>0?Math.round(g.grand/maxG*100):0;
-  const rank=sorted.findIndex(s=>s.name===g.name)+1;
-  const medal=rank<=3?['🥇','🥈','🥉'][rank-1]:'#'+rank;
+  const rank=1+sorted.filter(s=>Number(s.grand)>Number(g.grand)).length;
+  const medal=rankMedal(rank);
   const dt=g.dayTotals||Array(DAYS).fill(0);
   const dayPct=calcGirlDayPct(g);
   const dots=dt.map((v,i)=>'<div class="dd '+(v>0?'f':'e')+'"><div class="dn">'+(i+1)+'</div>'+(v>0?v:'')+'</div>').join('');
